@@ -1,0 +1,149 @@
+<div class="container-fluid">
+  <div id="search-form" class="row mt-3 justify-content-start">
+
+    <div class="col-12 col-md-6 col-xl-8 mb-3">
+        <a class="btn btn-primary btn-block gradient-custom-4" href="/category/add-category">
+          <i class="fas fa-plus-circle"></i>
+          Thêm danh mục
+        </a>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-4 mb-3">
+      <div class="p-1 bg-light rounded rounded-pill shadow-lg d-flex justify-content-end">
+        <div class="input-group">
+          <input id="myInput" type="search" onkeyup="mySearchFunction()" placeholder="Nhập tên danh mục bạn cần tìm?" aria-describedby="btn-search" class="form-control border-0 bg-light">
+          <div class="input-group-append">
+            <button id="btn-search" class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt-4">
+  <div class="table-responsive">
+    <table id="myTable" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Tên danh mục</th>
+          <th>Danh sách sản phẩm</th>
+          <th>Điều chỉnh</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each categories}}
+          <tr>
+            <td><h6>{{this.name}}</h6></td>
+            <td class="list-product{{@index}}"></td>
+            <td>
+              <div class="row">
+                <div class="col-4">
+                  <a href="/category/edit-category/{{_id}}">
+                    <i class="far fa-edit" style="font-size: 15px;"
+                    title="Chỉnh sửa danh mục"></i>
+                  </a>
+
+                </div>
+
+                <div class="col-4">
+                  <a
+                  href="/category/delete-category/{{_id}}"
+                  onclick="return confirm('Bạn có muốn xóa danh mục không')"
+                >
+                  <i class="fas fa-trash" style="color: red; font-size: 15px" 
+                  title="Xóa danh mục" >
+                </i>
+                </a>              
+                </div>
+              </div>          
+                
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<input type="hidden" value={{length}} id="length">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    const length = $('#length').val();
+    for(let i = 0; i < length; i++){
+      $(".list-product"+i).append($(".product"+i));
+    }
+  });  
+</script>
+
+{{#each products}}
+  <div class="product{{@index}}">
+    {{#if this}}
+      {{#each this}}      
+          <div class="product" style="display: flex; justify-content: space-between; margin-bottom: 7px;">
+            <div style="display: flex;">
+              <a href="{{this.image}}" target="_blank">
+                <img
+                class="thumbnail img-responsive"
+                src="{{this.image}}"
+                alt=""
+                width="150px"
+                height="150px"
+                style="margin-bottom: 5px; margin-right: 15px; border-radius: 10px;"
+                />
+              </a>            
+
+              <div>
+                <p>{{this.name}}</p>
+                <p>Giá: {{this.price}}</p>
+                <p>Số lượng còn: {{this.quantity}}</p>
+                <p>Thương hiệu: {{this.producer}}</p>
+              </div>
+            </div>         
+            
+            <div>
+              <a href="/product/delete-product/{{_id}}" 
+                onclick="return confirm('Bạn có muốn xóa sản phẩm khỏi danh mục này không')">
+                <i class="fas fa-trash" 
+                  style="color: red; font-size: 15px; margin-right: 20px"
+                  title="Xóa sản phẩm" >
+                </i>
+              </a>              
+            </div>
+
+          </div>      
+      {{/each}}
+    {{else}}
+      <h6>Không có sản phẩm nào</h6>
+    {{/if}}
+  </div>
+{{/each}}
+
+<div class="center">
+  <div class="mb-2">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item {{#unless this.isPreviousPage}} disabled {{/unless}}">
+                <a class="page-link " href="/category?page={{this.previousPage}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            {{#each pages}}
+                <li class="page-item {{#if this.isCurrentPage}} active {{/if}}">
+                    <a class="page-link" href="/category?page={{this.page}}">{{this.page}}</a>
+                </li>
+            {{/each}}
+
+            <li class="page-item {{#unless this.isNextPage}} disabled {{/unless}}">
+                <a class="page-link" href="/category?page={{this.nextPage}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+  </div>
+</div>

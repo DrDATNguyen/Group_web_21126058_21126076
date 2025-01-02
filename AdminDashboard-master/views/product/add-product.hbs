@@ -1,0 +1,181 @@
+<section class=" bg-image"
+  style="background-image: url('https://mdbootstrap.com/img/Photos/new-templates/search-box/img4.jpg'); background-size: cover;">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card mt-4" style="border-radius: 15px;">
+            <div class="card-body p-5">
+
+              {{#if msg}}
+              <div class="alert alert-danger">
+                {{msg}}
+              </div>
+              {{/if}}
+
+              <div style="display: none;" id="message" class="alert alert-danger" role="alert">
+              </div>
+
+              <h2 class="text-uppercase text-center mb-3">Thêm sản phẩm</h2>
+              <form id="add-product-form" action="/product/add-product" method="POST">
+
+                {{!-- name --}}
+                <div class="form-outline mb-2">
+                  <label class="form-label" for="name">Tên sản phẩm</label>
+                  <input name="name" type="text" id="name" class="form-control form-control-lg" required />
+                </div>
+
+                {{!-- details --}}
+                <div class="form-outline mb-2">
+                  <label class="form-label" for="details">Chi tiết</label>
+                  <textarea class="form-control" id="details" rows="5" name="details" required></textarea>
+                </div>
+
+                {{!-- price --}}
+                <div class="form-outline mb-2">
+                  <label class="form-label" for="price">Giá</label>
+                  <input name="price" type="number" id="price" class="form-control form-control-lg" required />
+                </div>
+
+                {{!-- quantity --}}
+                <div class="form-outline mb-2">
+                  <label class="form-label" for="quantity">Số lượng</label>
+                  <input name="quantity" type="number" id="quantity" class="form-control form-control-lg" required />
+                </div>
+
+                {{!-- image --}}
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="fileImageProduct">Ảnh</label>
+                  <input name="image" type="file" id="fileImageProduct" class="form-control form-control-lg" required />
+                </div>
+
+                {{!-- list image extra --}}
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="fileImageProduct">Danh sách ảnh bổ sung</label>
+                  <input name="listImageExtra" type="file" id="listImageExtra" class="form-control form-control-lg"
+                    accept="image/*" multiple required />
+                </div>
+
+
+
+                {{!-- category --}}
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="product-category">Danh mục</label>
+                  <select id="product-category" name="id_category" class="form-control form-control-lg">
+                    {{#each category}}
+                    <option value="{{this._id}}">{{this.name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+
+                {{!-- producer --}}
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="product-category">Thương hiệu</label>
+                  <select id="product-producer" name="id_producer" class="form-control form-control-lg">
+                    {{#each producer}}
+                    <option value="{{this._id}}">{{this.name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <input type="hidden" name="listUrlImageExtra" id="listUrlImageExtra" />
+                <input type="hidden" name="urlImage" id="url-image" />
+                <input type="hidden" name="category" id="selected-category" />
+                <input type="hidden" name="producer" id="selected-producer" />
+
+              </form>     
+
+              <div class="d-grid gap-2">
+                  <button
+                    onclick="myFunction()"
+                    class="btn btn-primary btn-lg gradient-custom-4"
+                    type="button"
+                  >Thêm</button>
+              </div>
+
+              <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+              <script>
+                function myFunction() {
+                  (async () => {
+                    const name = $('#name').val();
+                    const details = $('#details').val();
+                    const price = $('#price').val();
+                    const quantity = $('#quantity').val();
+                    const fileImageProduct = $('#fileImageProduct').val();
+                    const listImageExtra = $('#listImageExtra').val();
+
+                    if (name == "") {
+                      $('#message').show();
+                      $('#message').html('Bạn chưa nhập tên sản phẩm!');
+                      $('#name').focus();
+                      return;
+                    }
+                    if (details == "") {
+                      $('#message').show();
+                      $('#message').html('Bạn chưa nhập chi tiết sản phẩm!');
+                      $('#details').focus();
+                      return;
+                    }
+                    if (price == "") {
+                      $('#message').show();
+                      $('#message').html('Bạn chưa nhập giá sản phẩm!');
+                      $('#price').focus();
+                      return;
+                    }
+                    if (parseInt(price) < 0) {
+                      $('#message').show();
+                      $('#message').html('Giá sản phẩm không được nhỏ hơn 0!');
+                      $('#price').focus();
+                      return;
+                    }
+                    if (quantity == "") {
+                      $('#message').show();
+                      $('#message').html('Bạn chưa nhập số lượng sản phẩm!');
+                      $('#quantity').focus();
+                      return;
+                    }
+                    if (parseInt(quantity) < 0) {
+                      $('#message').show();
+                      $('#message').html('Số lượng sản phẩm không được nhỏ hơn 0!');
+                      $('#quantity').focus();
+                      return;
+                    }
+                    if (fileImageProduct == "") {
+                      $('#message').show();
+                      $('#message').html('Bạn chưa nhập ảnh sản phẩm!');
+                      $('#fileImageProduct').focus();
+                      return;
+                    }
+                    if (listImageExtra == "") {
+                      $('#message').show();
+                      $('#message').html('Bạn chưa nhập ảnh bổ sung sản phẩm!');
+                      $('#listImageExtra').focus();
+                      return;
+                    }
+
+                    const valueCategory = $("#product-category option:selected").text();
+                    $('#selected-category').val(valueCategory);
+
+                    const valueProducer = $("#product-producer option:selected").text();
+                    $('#selected-producer').val(valueProducer);
+
+                    const urlImage = await upload("#fileImageProduct");
+
+                    const listUrlImageExtra = await upload("#listImageExtra");
+
+
+                    document.getElementById('url-image').value = urlImage;
+
+                    document.getElementById('listUrlImageExtra').value = listUrlImageExtra;
+                    document.getElementById('add-product-form').submit();
+                  })();
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{> upload-image}}

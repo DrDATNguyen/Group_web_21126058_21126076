@@ -1,0 +1,46 @@
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#myTable {
+    overflow: hidden;
+    word-wrap: normal, break-word;
+}
+
+.icon_wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: rgb(255 255 255 / 55%);
+    background: #212529;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+}
+
+.icon_wrap:hover {
+    cursor: pointer;
+}
+
+.icon_wrap:active {
+    background: #cccccc;
+}
+
+.icon-button__badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 16px;
+    height: 16px;
+    background: red;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
