@@ -25,8 +25,6 @@ const SessionMiddleware = require("./middlewares/session");
 const PassportMiddleware = require("./middlewares/passport");
 const LocalsMiddleware = require("./middlewares/locals");
 const AuthMiddleware = require("./middlewares/auth");
-const AdminController = require('./controllers/admin.controller'); // Đảm bảo đường dẫn đến file đúng
-
 connectDB();    
 
 const app = express();
@@ -51,23 +49,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 SessionMiddleware(app);
 PassportMiddleware(app);
 app.use(LocalsMiddleware);
-const createDefaultAdmin = async () => {
-    try {
-      await new Promise((resolve, reject) => {
-        AdminController.postAddAdmin({}, { redirect: resolve }, (err) => {
-          if (err) {
-            reject(err);
-          }
-          resolve();
-        });
-      });
-      console.log('Admin đã được tạo');
-    } catch (error) {
-      console.error('Có lỗi khi tạo admin:', error);
-    }
-  };
-  
-  createDefaultAdmin();
+
 app.get("/", AuthMiddleware, function (req, res) {
     res.render("home");
 });

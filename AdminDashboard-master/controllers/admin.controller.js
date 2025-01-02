@@ -55,18 +55,17 @@ module.exports = {
         return res.render("admin/add-admin");
     },
     postAddAdmin: (req, res, next) => {
-        // Thêm tài khoản admin trực tiếp vào mã nguồn (admin mặc định)
-        const hash = bcrypt.hashSync("adminpassword", 10);  // Đặt mật khẩu cho admin
-    
+        const hash = bcrypt.hashSync(req.body.password, 10);
+
         const admin = new Admin({
-            username: "admin123",  // Tên tài khoản của admin
-            password: hash,        // Mật khẩu đã mã hóa
-            name: "Administrator",  // Tên admin
+            username: req.body.username,
+            password: hash,
+            name: req.body.name,
         });
-    
+
         admin.save((err) => {
             if (err) return next(err);
-            res.redirect("/admin?page=1");  // Sau khi lưu, chuyển hướng đến trang admin
+            res.redirect("/admin?page=1");
         });
     },
     profile: async (req, res, next) => {
