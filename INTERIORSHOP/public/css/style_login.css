@@ -1,0 +1,119 @@
+/* Tổng quát */
+body {
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* Phần form */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login-content {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 600px;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #e63946;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-group .icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.form-control:focus {
+    border-color: #e63946;
+    box-shadow: 0 0 5px rgba(230, 57, 70, 0.5);
+    outline: none;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px 15px;
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #d62828;
+}
+
+/* Liên kết */
+.signuphere a {
+    color: #e63946;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.signuphere a:hover {
+    text-decoration: underline;
+}
+
+/* Các thông báo */
+.alert {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.alert-success {
+    background: rgba(44, 208, 44, 0.1);
+    border: 1px solid #2cd02c;
+}
+
+.alert-danger {
+    background: rgba(230, 57, 70, 0.1);
+    border: 1px solid #e63946;
+    color: #e63946;
+}
+
+/* Text liên kết */
+.w-100.text-center p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
