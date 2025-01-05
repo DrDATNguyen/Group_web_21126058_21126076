@@ -1,0 +1,134 @@
+<div class="container">
+  <!-- Search Bar -->
+  <div class="search-filter">
+<input type="text" id="searchBar" placeholder="Search by name or description..." 
+       oninput="filterProducts()" onkeydown="handleKeyDown(event)">
+    
+    <!-- Filters -->
+    <select id="filterCategory" onchange="filterProducts()">
+      <option value="">All Categories</option>
+      <!-- Populate dynamically -->
+      {{#each categories}}
+        <option value="{{this.id}}">{{this.name}}</option>
+      {{/each}}
+    </select>
+
+    <select id="filterPrice" onchange="filterProducts()">
+      <option value="">All Prices</option>
+      <option value="low">Below $50</option>
+      <option value="medium">$50 - $100</option>
+      <option value="high">Above $100</option>
+    </select>
+
+    <select id="filterAvailability" onchange="filterProducts()">
+      <option value="">All Availability</option>
+      <option value="inStock">In Stock</option>
+      <option value="outOfStock">Out of Stock</option>
+    </select>
+
+    <select id="filterRating" onchange="filterProducts()">
+      <option value="">All Ratings</option>
+      <option value="4">4 stars & above</option>
+      <option value="3">3 stars & above</option>
+      <option value="2">2 stars & above</option>
+      <option value="1">1 star & above</option>
+    </select>
+  </div>
+
+  <!-- Product List -->
+  <h1 class="section-title">Product List</h1>
+  <div class="promotions">
+    <h2 class="section-subtitle">Promotional Programs</h2>
+    <ul class="promotion-list">
+      <li class="promotion-item">Buy 1 Get 1 Free on selected items!</li>
+      <li class="promotion-item">20% off on your first purchase!</li>
+      <li class="promotion-item">Free shipping on orders over $50!</li>
+    </ul>
+  </div>
+
+  <ul id="productList" class="product-list">
+    {{#each productsTypes}}
+      <li class="product-item" data-category="{{this.dataValues.categoryId}}">
+        <div class="product-card">
+          <div class="product-content">
+            <h2 class="product-title">{{this.dataValues.name}}</h2>
+            <p class="product-description">{{this.dataValues.Descriptions}}</p>
+          </div>
+          <ul class="product-details">
+            {{#each this.dataValues.products}}
+              <li class="product-detail"
+                  data-price="{{this.dataValues.Price}}"
+                  data-availability="{{this.dataValues.inStock}}"
+                  data-rating="{{this.dataValues.rating}}">
+                <img src="assets/images/{{this.dataValues.thumb}}" alt="{{this.dataValues.name}}" class="product-thumb">
+                <h3 class="product-name">{{this.dataValues.name}}</h3>
+                <p class="product-price">${{this.dataValues.Price}}</p>
+                <a href="/products/{{this.dataValues.id}}" class="button">View Details</a>
+              </li>
+            {{/each}}
+            <div class="advertisement">
+    <h2 class="section-subtitle">Advertisements</h2>
+    <div class="ad-banner">
+      <img src="https://blankroom.co/cdn/shop/articles/gioi-thieu-thuong-hieu-gucci.png?v=1711423709" alt="Ad Banner" class="ad-image">
+      <p class="ad-text">Check out our latest offers!</p>
+    </div>
+  </div>
+</div>
+
+          </ul>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+</div>
+<script>
+  async function filterProductsDirectly() {
+    const searchQuery = document.getElementById("searchBar").value;
+    const category = document.getElementById("filterCategory").value;
+    const price = document.getElementById("filterPrice").value;
+    const availability = document.getElementById("filterAvailability").value;
+    const rating = document.getElementById("filterRating").value;
+
+    try {
+      const response = await fetch('/products/direct-filter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ searchQuery, category, price, availability, rating })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch filtered products');
+      }
+
+      const products = await response.json();
+      const productList = document.getElementById("productList");
+      productList.innerHTML = ''; // Clear existing product list
+
+      // Render each product in the filtered list
+      products.forEach(product => {
+        const productItem = document.createElement('li');
+        productItem.classList.add('product-item');
+        productItem.innerHTML = `
+          <div class="product-card">
+            <div class="product-content">
+              <h2 class="product-title">${product.name}</h2>
+              <p class="product-description">${product.Descriptions}</p>
+            </div>
+            <img src="assets/images/${product.thumb}" alt="${product.name}" class="product-thumb">
+            <p class="product-price">$${product.Price}</p>
+            <a href="/products/${product.id}" class="button">View Details</a>
+          </div>
+        `;
+        productList.appendChild(productItem);
+      });
+    } catch (error) {
+      console.error('Error fetching filtered products:', error);
+    }
+  }
+
+  document.getElementById("searchBar").addEventListener("input", filterProductsDirectly);
+  document.getElementById("filterCategory").addEventListener("change", filterProductsDirectly);
+  document.getElementById("filterPrice").addEventListener("change", filterProductsDirectly);
+  document.getElementById("filterAvailability").addEventListener("change", filterProductsDirectly);
+  document.getElementById("filterRating").addEventListener("change", filterProductsDirectly);
+</script>
