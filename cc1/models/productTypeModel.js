@@ -36,6 +36,6 @@ const ProductsType = sequelize.define('ProductsType', {
 });
 
 // Thiết lập quan hệ: ProductsType có nhiều Product
-ProductsType.hasMany(Product, { foreignKey: 'ID_products_types', sourceKey: 'id' });
+// ProductsType.hasMany(Product, { foreignKey: 'ID_products_types', sourceKey: 'id' });
 
 module.exports = ProductsType;

@@ -45,6 +45,6 @@ const Product = sequelize.define('Product', {
 });
 
 // Thiết lập quan hệ: Product thuộc về ProductsType
-Product.belongsTo(ProductsType, { foreignKey: 'ID_products_types', targetKey: 'id' });
+// Product.belongsTo(ProductsType, { foreignKey: 'ID_products_types', targetKey: 'id' });
 
 module.exports = Product;

@@ -1,5 +1,11 @@
+{{#if successMessage}}
+    <div class="alert alert-success">{{successMessage}}</div>
+{{/if}}
 <div class="container">
   <!-- Search Bar -->
+   <div>
+            <p>LOG OUT HERE <a href="/users/logout">Register here</a></p>
+        </div>
   <div class="search-filter">
 <input type="text" id="searchBar" placeholder="Search by name or description..." 
        oninput="filterProducts()" onkeydown="handleKeyDown(event)">
@@ -37,14 +43,14 @@
 
   <!-- Product List -->
   <h1 class="section-title">Product List</h1>
-  <div class="promotions">
+  {{!-- <div class="promotions">
     <h2 class="section-subtitle">Promotional Programs</h2>
     <ul class="promotion-list">
       <li class="promotion-item">Buy 1 Get 1 Free on selected items!</li>
       <li class="promotion-item">20% off on your first purchase!</li>
       <li class="promotion-item">Free shipping on orders over $50!</li>
     </ul>
-  </div>
+  </div> --}}
 
   <ul id="productList" class="product-list">
     {{#each productsTypes}}
@@ -66,14 +72,14 @@
                 <a href="/products/{{this.dataValues.id}}" class="button">View Details</a>
               </li>
             {{/each}}
-            <div class="advertisement">
+            {{!-- <div class="advertisement">
     <h2 class="section-subtitle">Advertisements</h2>
     <div class="ad-banner">
       <img src="https://blankroom.co/cdn/shop/articles/gioi-thieu-thuong-hieu-gucci.png?v=1711423709" alt="Ad Banner" class="ad-image">
       <p class="ad-text">Check out our latest offers!</p>
     </div>
   </div>
-</div>
+</div> --}}
 
           </ul>
         </div>
