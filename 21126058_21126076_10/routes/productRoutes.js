@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, getProductDetail, directFilter } = require('../controllers/productController');
+const { getProducts, getProductDetail, directFilter,apiGetProducts } = require('../controllers/productController');
 const passport = require('passport');
 
 // Middleware kiểm tra xác thực người dùng
@@ -15,6 +15,7 @@ function ensureAuthenticated(req, res, next) {
 // Route công khai
 router.get('/',ensureAuthenticated, getProducts);
 router.get('/:id',ensureAuthenticated, getProductDetail);
+
 
 // Route bảo vệ (yêu cầu người dùng đăng nhập)
 // router.post('/direct-filter', ensureAuthenticated, directFilter);  // Chỉ những người dùng đã đăng nhập mới có thể sử dụng

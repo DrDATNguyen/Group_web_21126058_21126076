@@ -13,7 +13,7 @@ passport.use(
             try {
                 // Tìm người dùng dựa vào email
                 const user = await User.findOne({ where: { Email: email } });
-                console.log(user); // In thông tin user ra để kiểm tra
+                // console.log(user); // In thông tin user ra để kiểm tra
 
                 if (!user) {
                     return done(null, false, { message: 'Invalid email or password' });
@@ -36,7 +36,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-    console.log('Serializing user:', user); // Kiểm tra thông tin user
+    // console.log('Serializing user:', user); // Kiểm tra thông tin user
     if (user && user.id) {
         done(null, user.id); // Lưu ID người dùng vào session
     } else {
@@ -45,11 +45,11 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-    console.log('Deserializing user with ID:', id); // Kiểm tra ID
+    // console.log('Deserializing user with ID:', id); // Kiểm tra ID
     try {
         const user = await User.findByPk(id);
         if (user) {
-            console.log('User found:', user); // Kiểm tra thông tin user
+            // console.log('User found:', user); // Kiểm tra thông tin user
             done(null, user); // Trả về thông tin người dùng
         } else {
             done(null, false); // Nếu không tìm thấy user

@@ -6,3 +6,4 @@ ProductsType.hasMany(Product, { foreignKey: 'ID_products_types', sourceKey: 'id'
 Product.belongsTo(ProductsType, { foreignKey: 'ID_products_types', targetKey: 'id' });
 
 module.exports = { Product, ProductsType };
+//

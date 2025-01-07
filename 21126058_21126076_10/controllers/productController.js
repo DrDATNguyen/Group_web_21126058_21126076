@@ -20,7 +20,7 @@ exports.getProducts = async (req, res) => {
             // Add products to the product type object
             productsTypes[i].dataValues.products = products;
         }
-        console.log(productsTypes);
+        // console.log(productsTypes);
         // Render the view and pass productsTypes (with their products)
         res.render('products/list', { productsTypes ,successMessage, });
     } catch (error) {
@@ -57,6 +57,82 @@ exports.getProductDetail = async (req, res) => {
         res.status(500).send('Server Error'); // Return a 500 error if something goes wrong
     }
 };
+
+
+// API để lọc sản phẩm
+// API để lọc và hiển thị các sản phẩm
+exports.apiGetProducts = async (req, res) => {
+    try {
+        // Lấy các tham số từ query string
+        const { searchQuery, category, price, availability } = req.query;
+
+        // Xây dựng các điều kiện lọc với Op.or để thỏa mãn ít nhất một điều kiện
+        const conditions = {
+            [Op.or]: []  // Sử dụng Op.or để kết hợp các điều kiện
+        };
+
+        // Lọc theo tên hoặc mô tả sản phẩm
+        if (searchQuery) {
+            conditions[Op.or].push({
+                name: { [Op.like]: `%${searchQuery}%` }  // Tìm kiếm trong tên sản phẩm
+            });
+            conditions[Op.or].push({
+                Descriptions: { [Op.like]: `%${searchQuery}%` }  // Tìm kiếm trong mô tả sản phẩm
+            });
+        }
+
+        // Lọc theo loại sản phẩm (category)
+        if (category) {
+            conditions[Op.or].push({
+                ID_products_types: category // Lọc theo ID của loại sản phẩm
+            });
+        }
+
+        // Lọc theo giá
+        if (price === 'low') {
+            conditions[Op.or].push({
+                Price: { [Op.lt]: 50 } // Lọc các sản phẩm có giá dưới 50
+            });
+        } else if (price === 'medium') {
+            conditions[Op.or].push({
+                Price: { [Op.between]: [50, 100] } // Lọc các sản phẩm có giá từ 50 đến 100
+            });
+        } else if (price === 'high') {
+            conditions[Op.or].push({
+                Price: { [Op.gt]: 100 } // Lọc các sản phẩm có giá trên 100
+            });
+        }
+
+        // Lọc theo trạng thái còn hàng
+        if (availability === 'inStock') {
+            conditions[Op.or].push({
+                status: true // Lọc các sản phẩm còn hàng
+            });
+        } else if (availability === 'outOfStock') {
+            conditions[Op.or].push({
+                status: false // Lọc các sản phẩm hết hàng
+            });
+        }
+
+        // Lấy danh sách sản phẩm theo các điều kiện
+        const products = await Product.findAll({
+            where: {
+                [Op.or]: conditions[Op.or]  // Áp dụng điều kiện với Op.or
+            },
+            include: [{
+                model: ProductsType,
+                required: true // Bao gồm loại sản phẩm để lấy thêm thông tin
+            }],
+        });
+
+        // Trả về kết quả dưới dạng JSON
+        res.json(products);
+    } catch (error) {
+        console.error('Error fetching filtered products:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
 // productController.js
 
 // exports.filterProducts = async (req, res) => {
