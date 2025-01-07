@@ -1,0 +1,161 @@
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Thanh Toán</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Trang Chủ</a>
+                        <span>Thanh Toán</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <h4>Hóa đơn chi tiết</h4>
+            <form id="formCheckout" action="/checkout" method="POST">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="checkout__input">
+                                    <p>Họ và tên <span>*</span></p>
+                                    <input name="name" id="name-customer" type="text" value="{{user.name}}" readonly>
+                                </div>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Địa chỉ<span>*</span></p>
+                                <input type="text" value="{{user.address}}" placeholder="Địa chỉ nhà" class="checkout__input__add" readonly>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Số điện thoại<span>* {{#if errorNumberPhone}}Bạn nhập sai số điện thoại{{/if}}</span></p>
+                                        <input id="phone" required type="tel" name="numberPhone">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Email<span>*</span></p>
+                                        <input type="text" name="emailUser" value="{{user.email}}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Ghi chú</p>
+                                <input type="text" name="note" placeholder="Thông tin cần lưu ý">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4>Đơn đặt hàng</h4>
+                            <div class="checkout__order__products">Sản phẩm <span>Giá</span></div>
+                            <ul>
+                                {{#each listProductOrder}}
+                                    <li>{{this.name}} <span>{{format this.sumPriceProduct}}</span></li>
+                                {{/each}}
+                            </ul>
+
+                            <div class="checkout__order__total">Tổng <span>{{format sumPrice}}</span></div>
+
+                            <div>
+                                <button class="site-btn" style="border-radius: 10px;" onclick="postCheckout(event)">Đặt hàng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->
+
+<!-- Modal -->
+<div class="modal fade" id="notification" tabindex="-1" role="dialog" aria-labelledby="notification-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notification-label">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notify">
+                Bạn chờ chút nhé!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="fixHtml()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="admin-url" value="{{admin_url}}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/socket.io.js"></script>
+
+<script>
+    const admin_url = $('#admin-url').val() || 'http://localhost:3000';
+    const socket = io(admin_url); // port này là port của đích đến của socket.io
+
+    function sendMessage() {
+        let msg = $('#name-customer').val();
+        console.log(msg);
+        socket.emit("send-notification", msg);
+    }
+
+   function postCheckout(event) {
+    event.preventDefault();
+
+    const phone = $('#phone').val();
+    if (phone) {
+        // Gửi tin nhắn qua socket (nếu có yêu cầu)
+        sendMessage();
+
+        const checkoutData = {
+            name: $('#name-customer').val(),
+            numberPhone: phone,
+            email: $("input[name='emailUser']").val(),
+            note: $("input[name='note']").val(),
+            totalAmount: "{{sumPrice}}",  // Pass the sumPrice value to the payment page
+        };
+ console.log("Checkout Data:", checkoutData);
+        // Gửi dữ liệu checkout đến server qua Ajax
+        $.ajax({
+            url: "/checkout/process-checkout",  // Địa chỉ API xử lý checkout
+            type: "POST",   
+            data: checkoutData,  // Dữ liệu checkout
+            success: function(response) {
+                console.log("Server Response:", response);
+                if (response.checkoutId) {
+                    // Chuyển hướng sang trang thanh toán với checkoutId
+                window.location.href = "/payment/payment-method?checkoutId=" + response.checkoutId;               
+                 } else {
+                    console.log("No checkoutId returned");
+                }
+            },
+            error: function(err) {
+                console.log("Error during checkout:", err);
+            }
+        });
+    }
+}
+
+</script>
+
+{{#section 'script'}}
+{{/section}}
+
