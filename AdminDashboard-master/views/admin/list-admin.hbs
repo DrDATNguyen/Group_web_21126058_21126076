@@ -1,0 +1,63 @@
+<div class="container-fluid">
+  <div id="search-form" class="row mt-3 justify-content-end">
+    <div class="col-12 col-md-6 col-xl-4 mb-3">
+      <div class="p-1 bg-light rounded rounded-pill shadow-lg d-flex justify-content-end">
+        <div class="input-group">
+          <input id="myInput" type="search" onkeyup="mySearchFunction()" placeholder="Nhập họ tên bạn cần tìm?" aria-describedby="btn-search" class="form-control border-0 bg-light">
+          <div class="input-group-append">
+            <button id="btn-search" class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt-4">
+  <div class="table-responsive">
+    <table id="myTable" class="table table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Họ tên</th>
+          <th>Username</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each admins}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.username}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="center">
+  <div class="mb-2 position-absolute" style="bottom: 0px;">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item {{#unless this.isPreviousPage}} disabled {{/unless}}">
+                <a class="page-link " href="/admin?page={{this.previousPage}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            {{#each pages}}
+                <li class="page-item {{#if this.isCurrentPage}} active {{/if}}">
+                    <a class="page-link" href="/admin?page={{this.page}}">{{this.page}}</a>
+                </li>
+            {{/each}}
+
+            <li class="page-item {{#unless this.isNextPage}} disabled {{/unless}}">
+                <a class="page-link" href="/admin?page={{this.nextPage}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+  </div>
+</div>

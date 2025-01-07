@@ -1,0 +1,137 @@
+<div class="container-fluid">
+  <div id="search-form" class="row mt-3 justify-content-start">
+
+    <div class="col-12 col-md-6 col-xl-8 mb-3">
+        <a class="btn btn-primary btn-block gradient-custom-4" href="/account/add-account">
+          <i class="fas fa-plus-circle"></i>
+          Thêm tài khoản
+        </a>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-4 mb-3">
+      <div class="p-1 bg-light rounded rounded-pill shadow-lg d-flex justify-content-end">
+        <div class="input-group">
+          <input id="myInput" type="search" onkeyup="mySearchFunction()" placeholder="Nhập email bạn cần tìm?" aria-describedby="btn-search" class="form-control border-0 bg-light">
+          <div class="input-group-append">
+            <button id="btn-search" class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt-4">
+  <div class="table-responsive">
+    <table id="myTable" class="table table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Họ tên</th>
+          <th>Địa chỉ</th>
+          <th>Trạng thái</th>
+          <th>Điều chỉnh</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each account}}
+          <tr>
+            <td>{{this.email}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.address}}</td>
+
+            <td class="text-center">
+              {{#ifCond this.status "==" true}}
+                <i
+                  class="fas fa-check"
+                  style="color: green"
+                  title="Đang hoạt động"
+                ></i>
+                {{!-- <i class="fas fa-user-lock"></i> --}}
+              {{else}}
+                <i class="fas fa-user-lock" style="color: red" title="Đã bị khóa"></i>
+              {{/ifCond}}
+            </td>
+            <td>
+              <div class="row">
+                <div class="col-3">
+                  <a href="/account/edit-account/{{_id}}">
+                    <i class="far fa-edit" title="Chỉnh sửa tài khoản"></i>
+                  </a>
+                </div>
+
+                <div class="col-3">
+                  {{#ifCond this.status "==" true}}
+                    <a
+                      href="/account/block-account/{{_id}}"
+                      onclick="return confirm('Bạn có muốn khóa tài khoản không')"
+                    >
+                      <i
+                        class="fas fa-user-lock"
+                        style="color: red;"
+                        title="Khóa tài khoản"
+                      ></i>
+                    </a>
+                  {{else}}
+                    <a
+                      href="/account/unblock-account/{{_id}}"
+                      onclick="return confirm('Bạn có muốn mở khóa tài khoản không')"
+                    >
+                      <i
+                        class="fas fa-check"
+                        style="color: green"
+                        title="Mở khóa tài khoản"
+                      ></i>
+                    </a>
+                  {{/ifCond}}
+                </div>
+
+                <div class="col-3">
+                  <a
+                    href="/account/delete-account/{{_id}}"
+                    onclick="return confirm('Bạn có muốn xóa tài khoản không')"
+                  >
+                    <i
+                      class="fas fa-trash"
+                      style="color: red"
+                      title="Xóa tài khoản"
+                    ></i>
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="center">
+  <div class="mb-2 position-absolute" style="bottom: 0px;">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item {{#unless this.isPreviousPage}} disabled {{/unless}}">
+                <a class="page-link " href="/account?page={{this.previousPage}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            {{#each pages}}
+                <li class="page-item {{#if this.isCurrentPage}} active {{/if}}">
+                    <a class="page-link" href="/account?page={{this.page}}">{{this.page}}</a>
+                </li>
+            {{/each}}
+
+            <li class="page-item {{#unless this.isNextPage}} disabled {{/unless}}">
+                <a class="page-link" href="/account?page={{this.nextPage}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+  </div>
+</div>
