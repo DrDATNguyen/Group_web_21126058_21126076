@@ -51,8 +51,16 @@ module.exports = {
               (err, data2) => {
                 if (err) {
                   console.log(err);
+                  return res.status(500).json({
+                    result: "failed",
+                    message: "Failed to update ShoppingCart with new ProductOrder.",
+                  });
                 } else {
-                  console.log(data2);
+                  console.log("Added ProductOrder to ShoppingCart successfully:", data2);
+                  return res.status(200).json({
+                    result: "success",
+                    message: "Product added to ShoppingCart successfully!",
+                  });
                 }
               }
             );

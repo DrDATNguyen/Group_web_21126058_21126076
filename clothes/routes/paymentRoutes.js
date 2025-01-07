@@ -13,6 +13,6 @@ router.get("/payment-method", (req, res) => {
 // Route tiếp nhận dữ liệu từ form thanh toán
 router.post("/payment", paymentController.payment);
 // Route xác thực thanh toán VNPay (sau khi VNPay redirect lại)
-router.get("/payment/validate", paymentController.validatePayment);
+router.get("/validate", paymentController.validatePayment);
 
 module.exports = router;

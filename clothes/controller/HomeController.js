@@ -18,7 +18,7 @@ module.exports = {
           let product = await Product.findById(
             categoryData[i].listIdProduct[j]
           ).lean();
-
+          // console.log("Found product:", product); 
           categoryData[i].listProduct.push(product);
           if (j === 3) {
             break;

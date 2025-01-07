@@ -16,6 +16,7 @@
     </div>
   </div>
 </section>
+
 <section class="featured spad">
   <div class="container">
     <div class="row">
@@ -44,6 +45,7 @@
               <li>
                 <a id="addCart-{{this.idProduct}}" onclick="addShoppingCart('{{this.idProduct}}')"
                   value="{{this.idProduct}}" data-toggle="modal" data-target="#notification">
+
                   <i class="fa fa-shopping-cart"></i>
                 </a>
               </li>
@@ -80,6 +82,7 @@
     </div>
   </div>
 </div>
+
 <section class="from-post spad">
   <div class="container">
     <div class="row">
@@ -123,7 +126,45 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- Success notification modal -->
+<div class="modal fade" id="paymentSuccessPayModal" tabindex="-1" role="dialog" aria-labelledby="paymentSuccessLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentSuccessLabel">Thanh toán thành công</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Cảm ơn quý khách đã thanh toán. Đơn hàng của bạn đã được xác nhận.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Failure notification modal -->
+<div class="modal fade" id="paymentFailureModal" tabindex="-1" role="dialog" aria-labelledby="paymentFailureLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentFailureLabel">Thanh toán thất bại</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Cảm ơn quý khách. Thanh toán của bạn không thành công. Vui lòng thử lại sau.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
       </div>
     </div>
   </div>
@@ -131,6 +172,7 @@
 
 {{#section 'script'}}
 <script>
+  // Function to add product to shopping cart
   function addShoppingCart(idProduct) {
     let numProductOder = 1;
 
@@ -143,9 +185,25 @@
       },
       success: function (idProduct) {
         console.log("xong");
-        $('#exampleModal').trigger('focus')
+        $('#exampleModal').trigger('focus');
       }
     })
   }
+
+  // Check URL for success status and message, and show success modal
+  $(document).ready(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const message = urlParams.get('message');
+    
+    if (status === 'success' && message) {
+      $('#paymentSuccessModal').modal('show');
+    } else if (status === 'successpay' && message) {
+      $('#paymentSuccessPayModal').modal('show');
+    } else if (status === 'failurepay' && message) {
+      // Nếu là trạng thái 'failure', hiển thị modal thất bại
+      $('#paymentFailureModal').modal('show');
+    }
+  });
 </script>
 {{/section}}

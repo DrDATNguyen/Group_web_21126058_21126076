@@ -8,7 +8,8 @@ const CheckOut = new Schema(
     idShoppingCart: { type: Schema.Types.ObjectId },
     note: { type: String, maxlength: 255 },
     status: { type: String, maxlength: 255 },
-    totalAmount: { type: Number, required: true }, // Thêm trường totalAmount vào Schema
+    totalAmount: { type: Number, required: false }, // Thêm trường totalAmount vào Schema
+    isPaid: { type: Boolean, default: false } // Trường kiểm tra thanh toán, mặc định là false
 
   },
 

@@ -177,67 +177,89 @@ module.exports = {
   },
   
   async getMyAccount(req, res, next) {
-    if (req.user == null) {
+    if (!req.user) {
       res.redirect("/login");
       return;
     }
-    const user = await User.findOne({ email: req.user.email });
-    let checkOutUserAll = await CheckOut.find({
-      email: req.user.email,
-    }).lean();
-
-    for (let i = 0; i < checkOutUserAll.length; i++) {
-      const shoppingCartUser = await ShoppingCart.findById(
-        checkOutUserAll[i].idShoppingCart
-      ).lean();
-      checkOutUserAll[i].listProductOrder = [];
-
-      let sum = 0;
-      for (let j = 0; j < shoppingCartUser.listProductOrder.length; j++) {
-        const productOrder = await ProductOrder.findById(
-          shoppingCartUser.listProductOrder[j]
+  
+    try {
+      const user = await User.findOne({ email: req.user.email });
+      if (!user) {
+        res.redirect("/login");
+        return;
+      }
+  
+      let checkOutUserAll = await CheckOut.find({
+        email: req.user.email,
+      }).lean();
+  
+      for (let i = 0; i < checkOutUserAll.length; i++) {
+        const shoppingCartUser = await ShoppingCart.findById(
+          checkOutUserAll[i].idShoppingCart
         ).lean();
-
-        sum += productOrder.unitPrice * productOrder.quantity;
-        checkOutUserAll[i].listProductOrder.push(productOrder);
+  
+        // Nếu shoppingCartUser null, bỏ qua xử lý
+        if (!shoppingCartUser || !shoppingCartUser.listProductOrder) {
+          continue;
+        }
+  
+        // Ghi log danh sách listProductOrder
+        console.log(`listProductOrder in shoppingCartUser (index ${i}):`, shoppingCartUser.listProductOrder);
+  
+        checkOutUserAll[i].listProductOrder = [];
+        let sum = 0;
+  
+        for (const productOrderId of shoppingCartUser.listProductOrder) {
+          // Ghi log id của từng productOrder
+          console.log(`Processing productOrderId: ${productOrderId}`);
+  
+          const productOrder = await ProductOrder.findById(productOrderId).lean();
+  
+          // Nếu productOrder không tồn tại, ghi log và tiếp tục vòng lặp
+          if (!productOrder) {
+            console.log(`ProductOrder not found for id: ${productOrderId}`);
+            continue;
+          }
+  
+          sum += productOrder.unitPrice * productOrder.quantity;
+          checkOutUserAll[i].listProductOrder.push(productOrder);
+  
+          // Ghi log thông tin chi tiết của từng productOrder
+          console.log(`Added productOrder:`, productOrder);
+        }
+  
+        checkOutUserAll[i].total = sum;
       }
-      checkOutUserAll[i].total = sum;
+  
+      // Tách các trạng thái khác nhau
+      const checkOutPending = checkOutUserAll.filter(
+        (item) => item.status === "Pending"
+      );
+      const checkOutDelivering = checkOutUserAll.filter(
+        (item) => item.status === "Delivering"
+      );
+      const checkOutDelivered = checkOutUserAll.filter(
+        (item) => item.status === "Delivered"
+      );
+      const checkOutCanceled = checkOutUserAll.filter(
+        (item) => item.status === "Canceled"
+      );
+  
+      res.render("my-account/my-account", {
+        layout: false,
+        user: utils.mongooseToObject(user),
+        checkOutUserAll,
+        checkOutPending,
+        checkOutDelivering,
+        checkOutDelivered,
+        checkOutCanceled,
+      });
+    } catch (error) {
+      console.error("Error in getMyAccount:", error);
+      res.status(500).send("Internal Server Error");
     }
-    let checkOutPending = [];
-    checkOutUserAll.map((item) => {
-      if (item.status == "Pending") {
-        checkOutPending.push(item);
-      }
-    });
-    let checkOutDelivering = [];
-    checkOutUserAll.map((item) => {
-      if (item.status == "Delivering") {
-        checkOutDelivering.push(item);
-      }
-    });
-    let checkOutDelivered = [];
-    checkOutUserAll.map((item) => {
-      if (item.status == "Delivered") {
-        checkOutDelivered.push(item);
-      }
-    });
-    let checkOutCanceled = [];
-    checkOutUserAll.map((item) => {
-      if (item.status == "Canceled") {
-        checkOutCanceled.push(item);
-      }
-    });
-
-    res.render("my-account/my-account", {
-      layout: false,
-      user: utils.mongooseToObject(user),
-      checkOutUserAll: checkOutUserAll,
-      checkOutPending: checkOutPending,
-      checkOutDelivering: checkOutDelivering,
-      checkOutDelivered: checkOutDelivered,
-      checkOutCanceled: checkOutCanceled,
-    });
   },
+  
 
   getMyAccountEdit: async(req, res, next) => {
     if (req.user == null) {

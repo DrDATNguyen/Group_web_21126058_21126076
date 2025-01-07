@@ -1,5 +1,3 @@
-
-
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
     <div class="container">
@@ -47,13 +45,13 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="text" name="emailUser" value="{{user.email}}" readonly>
+                                        <input id="emailUser" type="text" name="emailUser" value="{{user.email}}" readonly>
                                     </div>
                                 </div>
                             </div>
                             <div class="checkout__input">
                                 <p>Ghi chú</p>
-                                <input type="text" name="note" placeholder="Thông tin cần lưu ý">
+                                <input id="note" type="text" name="note" placeholder="Thông tin cần lưu ý">
                             </div>
                         </div>
                     </div>
@@ -68,10 +66,10 @@
                                 {{/each}}
                             </ul>
 
-                            <div class="checkout__order__total">Tổng <span>{{format sumPrice}}</span></div>
+                            <div class="checkout__order__total">Tổng <span id="sumPrice">{{format sumPrice}}</span></div>
 
                             <div>
-                                <button class="site-btn" style="border-radius: 10px;" onclick="postCheckout(event)">Đặt hàng</button>
+                                <button class="site-btn" style="border-radius: 10px;" onclick="postCheckout1(event)">Đặt hàng</button>
                             </div>
                         </div>
                     </div>
@@ -109,7 +107,7 @@
 
 <script>
     const admin_url = $('#admin-url').val() || 'http://localhost:3000';
-    const socket = io(admin_url); // port này là port của đích đến của socket.io
+    const socket = io(admin_url);
 
     function sendMessage() {
         let msg = $('#name-customer').val();
@@ -117,45 +115,53 @@
         socket.emit("send-notification", msg);
     }
 
-   function postCheckout(event) {
-    event.preventDefault();
+    function postCheckout1(event) {
+        event.preventDefault();
 
-    const phone = $('#phone').val();
-    if (phone) {
-        // Gửi tin nhắn qua socket (nếu có yêu cầu)
-        sendMessage();
+        const phone = $('#phone').val();
+        const totalAmount = parseFloat('{{sumPrice}}');
+        const emailUser = $('#emailUser').val();
+        const note = $('#note').val();
+        const idShoppingCart = '{{idShoppingCart}}';
+        const isPaid = false;
+        // In ra các giá trị trong bảng điều khiển (console)
+    console.log("Phone:", phone);
+    console.log("Total Amount:", totalAmount);
+    console.log("Email User:", emailUser);
+    console.log("Note:", note);
+    console.log("ID Shopping Cart:", idShoppingCart);
+    console.log("isPaid:", isPaid);
+
+        if (!phone) {
+            alert("Vui lòng nhập số điện thoại.");
+            return;
+        }
 
         const checkoutData = {
-            name: $('#name-customer').val(),
             numberPhone: phone,
-            email: $("input[name='emailUser']").val(),
-            note: $("input[name='note']").val(),
-            totalAmount: "{{sumPrice}}",  // Pass the sumPrice value to the payment page
+            totalAmount: totalAmount,
+            email: emailUser,
+            idShoppingCart: idShoppingCart,
+            note: note,
+            isPaid:isPaid,
         };
- console.log("Checkout Data:", checkoutData);
-        // Gửi dữ liệu checkout đến server qua Ajax
+
         $.ajax({
-            url: "/checkout/process-checkout",  // Địa chỉ API xử lý checkout
-            type: "POST",   
-            data: checkoutData,  // Dữ liệu checkout
+            url: "/checkout/process-checkout",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(checkoutData),
             success: function(response) {
-                console.log("Server Response:", response);
                 if (response.checkoutId) {
-                    // Chuyển hướng sang trang thanh toán với checkoutId
-                window.location.href = "/payment/payment-method?checkoutId=" + response.checkoutId;               
-                 } else {
-                    console.log("No checkoutId returned");
+                    window.location.href = `/payment/payment-method?checkoutId=${response.checkoutId}&email=${response.email}`;
+                } else {
+                    alert("Có lỗi xảy ra. Vui lòng thử lại sau.");
                 }
             },
             error: function(err) {
-                console.log("Error during checkout:", err);
+                console.error("Error during checkout:", err);
+                alert("Không thể xử lý đơn hàng. Vui lòng thử lại.");
             }
         });
     }
-}
-
 </script>
-
-{{#section 'script'}}
-{{/section}}
-
