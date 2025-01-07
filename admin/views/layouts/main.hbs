@@ -1,0 +1,389 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Admin</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAKHaWmfJvKhi75Lm9lTFp9miy38CQtvGv_w&usqp=CAU" />
+
+	{{{_sections.script_revenue_chart}}}
+    {{{_sections.css_chart}}}
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+	<link rel="stylesheet" href="/css/tooplate-style.css" />
+	<link rel="stylesheet" href="/css/notification.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/my_style.css" />
+	<link rel="stylesheet" href="/css/toastr.min.css"/>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+      <!-- Navbar Brand-->
+      <a class="navbar-brand ps-3" href="/">Admin</a>
+      <!-- Sidebar Toggle-->
+      <button
+        class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+        id="sidebarToggle"
+        href="#!"
+      ><i class="fas fa-bars"></i></button>
+      <!-- Navbar Search-->
+      <form
+        class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+      >
+        <div class="input-group">
+          <input
+            hidden
+            class="form-control"
+            type="text"
+            placeholder="Tìm kiếm..."
+            aria-label="Search for..."
+            aria-describedby="btnNavbarSearch"
+          />
+          <button
+            hidden
+            class="btn btn-primary"
+            id="btnNavbarSearch"
+            type="button"
+          ><i class="fas fa-search"></i></button>
+        </div>
+      </form>
+
+      {{#if isAuthenticated}}
+        <p class="navbar-text" style="margin-top: auto;">
+          Welcome
+          <b> {{authUser.name}}</b>
+        </p>
+      {{/if}}
+
+		<div class="notifications">
+			<button type="button" class="icon_wrap">
+				<i class="fas fa-bell"></i>
+				<span style="font-size: 10px;" class="icon-button__badge"> 1 </span>
+			</button>
+			<div class="notification_dd">
+				<h5 class="text-center mt-2">Thông báo</h5>
+				<hr class="mt-0 mb-0" />
+				<ul class="notification_ul">
+					<li class="starbucks success">
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="notify_data">
+							<div class="title">Lorem, ipsum dolor.</div>
+							<div class="sub_title">
+								Lorem ipsum dolor sit amet consectetur.
+							</div>
+							</div>
+							<div class="notify_status">
+							<a title="chưa xem" href="#"><i
+								class="fas fa-circle"
+								style="font-size: 12px; color: rgb(5, 126, 173)"
+								></i></a>
+							</div>
+						</div>
+					</li>
+
+					{{!-- <li class="show_all">
+					<p class="link">Show All Activities</p>
+					</li> --}}
+				</ul>
+			</div>
+		</div>
+			
+		<div class="popup">
+			<div class="shadow"></div>
+			<div class="inner_popup">
+				<div class="notification_dd">
+					<ul class="all-notification_ul">
+						<li class="title">
+							<p>All Notifications</p>
+							<p class="close">
+							<i class="fas fa-times" aria-hidden="true"></i>
+							</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+      <!-- Navbar-->
+      <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          ><i class="fas fa-user fa-fw"></i></a>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="navbarDropdown"
+          >
+            {{! <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
+                        <li><hr class="dropdown-divider" /></li> }}
+            <li
+              class="d-flex align-items-center justify-content-around dropdown-item"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+              <a class="dropdown-item" href="/admin/logout">Đăng xuất</a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li
+              class="d-flex align-items-center justify-content-around dropdown-item"
+            >
+              <i class="fas fa-user-circle"></i>
+              <a class="dropdown-item" href="/admin/profile">Thông tin tài khoản</a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li
+              class="d-flex align-items-center justify-content-around dropdown-item"
+            >
+              <i class="fas fa-user-edit"></i>
+              <a class="dropdown-item" href="/admin/edit-profile">Cập nhật tài
+                khoản</a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li
+              class="d-flex align-items-center justify-content-around dropdown-item"
+            >
+              <i class="fas fa-users-cog"></i>
+              <a class="dropdown-item" href="/admin?page=1">Danh sách admin</a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li
+              class="d-flex align-items-center justify-content-around dropdown-item"
+            >
+              <i class="fas fa-user-plus"></i>
+              <a class="dropdown-item" href="/admin/add-admin">Thêm admin</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <div id="layoutSidenav">
+      <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+          <div class="sb-sidenav-menu">
+            <div class="nav">
+              <div class="sb-sidenav-menu-heading">Tài khoản</div>
+
+              <a class="nav-link" href="/account?page=1">
+                <div class="sb-nav-link-icon"><i
+                    class="fas fa-list-ul"
+                  ></i></div>
+                Xem danh sách
+              </a>
+
+              <div class="sb-sidenav-menu-heading">Sản phẩm</div>
+              <a class="nav-link" href="/product?page=1">
+                <div class="sb-nav-link-icon"><i
+                    class="fas fa-list-ul"
+                  ></i></div>
+                Xem danh sách
+              </a>
+
+              <div class="sb-sidenav-menu-heading">Danh mục</div>
+              <a class="nav-link" href="/category?page=1">
+                <div class="sb-nav-link-icon"><i
+                    class="fas fa-list-ul"
+                  ></i></div>
+                Xem danh sách
+              </a>
+
+				<div class="sb-sidenav-menu-heading">Thương hiệu</div>
+				<a class="nav-link" href="/producer?page=1">
+					<div class="sb-nav-link-icon"><i
+						class="fas fa-list-ul"
+					></i></div>
+					Xem danh sách
+				</a>
+
+				<div class="sb-sidenav-menu-heading">Thống kê</div>
+              	<a class="nav-link" href="/revenue">
+					<div class="sb-nav-link-icon"><i
+						class="fas fa-list-ul"
+					></i></div>
+					Doanh thu
+             	</a>
+
+				 <div class="sb-sidenav-menu-heading">Đơn đặt hàng</div>
+				<a class="nav-link" href="/orders?page=1">
+					<div class="sb-nav-link-icon"><i
+						class="fas fa-list-ul"
+					></i></div>
+					Xem danh sách
+				</a>
+
+            </div>
+          </div>
+
+        </nav>
+      </div>
+      <div id="layoutSidenav_content">
+        {{{body}}}
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+
+	{{{_sections.js_revenue_chart}}}
+	<script src="js/notification.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="/js/search.js"></script>
+	<script src="/js/toastr.min.js"></script>
+	<script src="/js/socket.io.js"></script>
+
+	<script>
+			// https://customer-hms.herokuapp.com/
+			// http://localhost:3000
+			const socket = io("https://ashdashboard.herokuapp.com/"); // port này là của server
+
+			toastr.options = {
+				timeOut: 4000,
+				positionClass: "toast-bottom-right",
+				extendedTimeOut: 0,
+				fadeOut: 3000,
+				fadeIn: 0,
+				showDuration: 0,
+				hideDuration: 2000,
+				debug: false,
+			};
+
+			socket.on("new-notification", (resp) => {
+				// get current time
+				const time = new Date().toLocaleString(); // 11/16/2015, 11:18:48 PM
+
+				const msg = `Khách hàng ${resp} đã đặt hàng lúc ${time}`;
+				console.log(msg);
+				toastr.success(msg, "New notification");
+
+				setTimeout(() => {
+					$.ajax({
+						url: "/api/notification/notify",
+						type: "GET",
+						success: (data) => {
+							console.log(data);					
+							updateNotification(data);
+						},
+					});
+				}, 2000);
+				
+			});
+
+			const updateNotification = (data) => {
+				
+				const dataNotSeen = data.filter((value) => {
+							return !value.seen;
+						});
+				if (dataNotSeen.length > 0) {
+					$(".icon-button__badge").html(dataNotSeen.length);
+					$(".icon-button__badge").show();
+				} else {
+					$(".icon-button__badge").hide();
+				}
+				let html = "";
+				for(let value of data){
+					html += `
+					<li class="starbucks success">
+						<div class="d-flex justify-content-around align-items-center">
+							<div class="notify_data">
+								<div class="title">${value.title}</div>
+								<div class="sub_title">
+									${value.content} lúc ${value.time}
+								</div>
+							</div>`;
+					if (!value.seen){
+							const id = `${value._id}`;
+							html += `<div class="notify_status">
+										<p title="chưa xem" style="cursor: pointer;" onclick="updateStatusSeen('${id}')">
+											<i class="fas fa-circle"
+												style="font-size: 12px; color: rgb(5, 126, 173)"
+											></i>
+										</p>
+									</div>`;
+					} else{
+						html += `<div class="notify_status">
+										<a title="đã xem" href="#" style="pointer-events: none; cursor: default;">
+											<i class="fas fa-circle"
+												style="font-size: 12px; color: white"
+											></i>
+										</a>
+									</div>`;
+					}
+					html += `</div>
+								</li>`;
+				}
+
+				let htmlCopy = html;
+				if (data.length > 4) {
+					html += `<li class="show_all">
+								<p onclick="showAllNotification()" class="link">Show All Activities</p>
+							</li`;
+				}
+				htmlCopy = `<li class="title">
+								<p>All Notifications</p>
+								<p class="close" onclick="closePopup()">
+									<i class="fas fa-times" aria-hidden="true"></i>
+								</p>
+						</li>` + htmlCopy;
+				$(".notification_ul").html(html);
+				$(".all-notification_ul").html(htmlCopy);
+			};
+
+			const showAllNotification = () =>{
+				console.log("show all");
+				$(".popup").show();
+			}
+
+			const closePopup = () => {
+				$(".popup").hide();
+			}
+
+			const updateStatusSeen = (id) => {
+				$.ajax({
+					url: `/api/notification/update-status/${id}`,
+					type: "GET",
+					success: (data) => {
+						console.log(data);
+						updateNotification(data);
+					},
+				});
+			};
+
+			$(document).ready(() => {
+				console.log("ready");
+				$.ajax({
+					url: "/api/notification/notify",
+					type: "GET",
+					success: (data) => {
+						console.log(data);					
+						updateNotification(data);
+					},
+				});
+							
+			});
+
+	
+	</script>
+  </body>
+</html>
